@@ -9,4 +9,6 @@ class groups extends Model
 {
     use HasFactory;
     use SoftDeletes;
+    protected $table = "groups";
+    protected $primaryKey = 'id_group';
 }

@@ -13,6 +13,6 @@ class groupsSeeder extends Seeder
      */
     public function run()
     {
-        //
+        \App\Models\groups::factory()->count(100)->create();
     }
 }

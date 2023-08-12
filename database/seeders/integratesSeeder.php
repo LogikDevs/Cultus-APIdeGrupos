@@ -13,6 +13,6 @@ class integratesSeeder extends Seeder
      */
     public function run()
     {
-        //
+        \App\Models\integrates::factory()->count(100)->create();
     }
 }
