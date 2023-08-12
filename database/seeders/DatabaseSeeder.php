@@ -3,16 +3,18 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-
+use App\Models\user;
+use App\Models\country;
+use App\Models\groups;
+use App\Models\integrates;
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     *
-     * @return void
-     */
+
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
+        $this->call(countrySeeder::class);
+        $this->call(groupsSeeder::class);
+        $this->call(integratesSeeder::class);
+        $this->call(userSeeder::class);
     }
 }
