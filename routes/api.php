@@ -7,8 +7,10 @@ use App\Http\Middleware\Autenticacion;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::prefix('v1')->group(function(){
+Route::prefix('v1')->middleware(Autenticacion::class)->group(function(){
 
-    Route::get("/group/{d}",[GroupsController::class,"ListOne"])->middleware(Autenticacion::class);
+    Route::get("/group/{d}",[GroupsController::class, "ListOne"]);
+    Route::post("/group", [GroupsController::class, "Create"]);
 
+    Route::get("/group", [GroupsController::class, "ListAll"]);
 });

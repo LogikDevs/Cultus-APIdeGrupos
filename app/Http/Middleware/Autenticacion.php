@@ -11,8 +11,8 @@ class Autenticacion
        public function handle(Request $request, Closure $next){    
         
            $tokenHeader = [ "Authorization" => $request -> header("Authorization")];
-           //getenv("API_AUTH_URL") . "
-            $response = Http::withHeaders($tokenHeader)->timeout(500)->get("http://api_auth:8000/api/v1/validate");
+           
+            $response = Http::withHeaders($tokenHeader)->timeout(500)->get(getenv("API_AUTH_URL") . "/validate");
             
             if($response -> successful())
                 return $next($request);
