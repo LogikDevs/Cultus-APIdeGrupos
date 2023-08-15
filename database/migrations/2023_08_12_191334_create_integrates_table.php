@@ -15,7 +15,10 @@ class CreateIntegratesTable extends Migration
             $table->unsignedBigInteger("id_user");
             $table->foreign("id_user")->references("id")->on("users");
             $table->unsignedBigInteger("id_group");
-            $table->foreign("id_group")->references("id_group")->on("groups");             
+            $table->foreign("id_group")->references("id_group")->on("groups");   
+            
+            $table->string('rol');
+
             $table->timestamps();
             $table->softDeletes();
         });

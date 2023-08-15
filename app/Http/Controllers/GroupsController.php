@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\groups;
+use App\Http\Controllers\IntegratesController;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 class GroupsController extends Controller
@@ -32,7 +33,9 @@ class GroupsController extends Controller
                 'name'=>'required | string | max:50',
                 'description'=> 'nullable | max:255',
                 'picture' => 'nullable|image|mimes:png,jpg,jpeg|max:2048',
-                'privacy' => 'required | in:public,private'
+                'privacy' => 'required | in:public,private',
+
+                'id_user' => 'required | exists:users,id'
                 
             ]);
             return $validation;
@@ -52,9 +55,8 @@ class GroupsController extends Controller
         $Group -> picture = $path;
         }
         $Group->save();
-        return $Group;
-
-
+        $Integrates = new  IntegratesController();
+        $Integrates -> createAdmin($request->post("id_user"), $Group->id_group);
     }
 
     public function EditName(request $request, $id){
@@ -70,7 +72,7 @@ class GroupsController extends Controller
     public function EditNameValidation(request $request){
         $validation = Validator::make($request->all(),[
             'name'=>'required | string | max:50',
-            'id_group'=>'required | exists:groups:id_group'
+            'id_group'=>'required | exists:groups,id_group'
         ]);
         return $validation;
     }
