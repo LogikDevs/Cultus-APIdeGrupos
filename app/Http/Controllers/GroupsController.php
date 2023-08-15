@@ -38,6 +38,7 @@ class GroupsController extends Controller
             return $validation;
     }
 
+
     public function CreateRequest(request $request){
         $Group = new groups();
 
@@ -56,6 +57,27 @@ class GroupsController extends Controller
 
     }
 
+    public function EditName(request $request, $id){
+        $validation = self::EditNameValidation($request);
+
+        if ($validation->fails())
+        return $validation->errors();
+    
+        return $this -> EditNameRequest($request);
+    }
 
 
+    public function EditNameValidation(request $request){
+        $validation = Validator::make($request->all(),[
+            'name'=>'required | string | max:50',
+            'id_group'=>'required | exists:groups:id_group'
+        ]);
+        return $validation;
+    }
+
+    public function EditNameRequest(request $request){
+        $Group = groups::findOrFail($request->post("id_group"));
+        $Group->name = $request->post("name");
+        $Group->save();
+    }
 }
