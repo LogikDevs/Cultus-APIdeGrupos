@@ -12,6 +12,7 @@ class IntegratesFactory extends Factory
         return [
             'id_user' => \App\Models\user::factory(),
             'id_group' => \App\Models\groups::factory(),
+            'rol' => $this->faker->randomElement(['Admin', 'Member']),
         ];
     }
 }
