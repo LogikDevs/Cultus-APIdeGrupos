@@ -16,5 +16,6 @@ class IntegratesController extends Controller
         $Integrates -> rol = 'Admin';
 
         $Integrates -> save();
+        return $Integrates;
     }
 }
