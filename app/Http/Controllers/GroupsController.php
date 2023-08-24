@@ -20,6 +20,7 @@ class GroupsController extends Controller
     }
 
     public function Create(request $request){
+
         $validation = self::CreateValidation($request);
 
         if ($validation->fails())
@@ -56,10 +57,12 @@ class GroupsController extends Controller
         }
         $Group->save();
         $Integrates = new  IntegratesController();
-        $Integrates -> createAdmin($request->post("id_user"), $Group->id_group);
+        $Integrate =  $Integrates -> createAdmin($request->post("id_user"), $Group->id_group);
+
+        return response()->json([$Group, $Integrate], 201);
     }
 
-    public function EditName(request $request, $id){
+    public function EditName(request $request){
         $validation = self::EditNameValidation($request);
 
         if ($validation->fails())
@@ -81,5 +84,6 @@ class GroupsController extends Controller
         $Group = groups::findOrFail($request->post("id_group"));
         $Group->name = $request->post("name");
         $Group->save();
+        return response()->json([$Group], 201);
     }
 }
