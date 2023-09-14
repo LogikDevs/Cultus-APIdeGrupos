@@ -1,0 +1,41 @@
+name: Test
+on:
+  pull_request:
+    branches:
+      - stage
+
+jobs:
+  RunTest:
+    services:
+      mysql:
+        image: mysql:8
+        env:
+          MYSQL_DATABASE: cultus
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=10s --health-retries=10
+    runs-on: self-hosted
+    env:
+      DB_HOST: mysql
+    container:
+      image: ggmartinez/laravel:php-82
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
+      - name: Preparar Laravel
+        run: |
+          cp .env.example .env
+          composer install
+          php artisan key:generate
+      - name: Preparar base de datos para pruebas
+        run: |
+          php artisan migrate:fresh
+          php artisan db:seed
+      - name: passport
+        run: |
+          php artisan passport:install
+          php artisan key:generate
+      - name: Ejecutar pruebas
+        run: php artisan test
