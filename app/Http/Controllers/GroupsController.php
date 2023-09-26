@@ -7,6 +7,8 @@ use App\Models\groups;
 use App\Http\Controllers\IntegratesController;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
+
 class GroupsController extends Controller
 {
 
@@ -42,10 +44,14 @@ class GroupsController extends Controller
             return $validation;
     }
 
-
     public function CreateRequest(request $request){
-        $Group = new groups();
 
+        try {
+        DB::raw('LOCK TABLE groups WRITE');
+        DB::raw('LOCK TABLE integrates WRITE');
+        DB::beginTransaction();
+
+        $Group = new groups();
         $Group->name = $request->post("name");
         $Group -> description = $request ->post("description");
         $Group -> privacy = $request ->post("privacy");
@@ -56,10 +62,25 @@ class GroupsController extends Controller
         $Group -> picture = $path;
         }
         $Group->save();
+
         $Integrates = new  IntegratesController();
         $Integrate =  $Integrates -> createAdmin($request->post("id_user"), $Group->id_group);
 
         return response()->json([$Group, $Integrate], 201);
+
+        DB::commit();
+        DB::raw('UNLOCK TABLES');
+    }
+        catch (\Illuminate\Database\QueryException $th) {
+            DB::rollback();
+            return $th->getMessage();
+        }
+        catch (\PDOException $th) {
+            return response("Permission to DB denied",403);
+
+        }
+
+      
     }
 
     public function EditName(request $request){
