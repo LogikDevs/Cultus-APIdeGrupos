@@ -102,9 +102,21 @@ class GroupsController extends Controller
     }
 
     public function EditNameRequest(request $request){
+        try {
+            DB::raw('LOCK TABLE groups WRITE');
+            DB::beginTransaction();
         $Group = groups::findOrFail($request->post("id_group"));
         $Group->name = $request->post("name");
         $Group->save();
         return response()->json([$Group], 201);
+        }
+        catch (\Illuminate\Database\QueryException $th) {
+            DB::rollback();
+            return $th->getMessage();
+        }
+        catch (\PDOException $th) {
+            return response("Permission to DB denied",403);
+
+        }
     }
 }
