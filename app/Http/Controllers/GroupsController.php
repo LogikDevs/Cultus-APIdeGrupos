@@ -32,13 +32,14 @@ class GroupsController extends Controller
     }
 
     public function CreateValidation(request $request){
+        
             $validation = Validator::make($request->all(),[
                 'name'=>'required | string | max:50',
                 'description'=> 'nullable | max:255',
                 'picture' => 'nullable|image|mimes:png,jpg,jpeg|max:2048',
                 'privacy' => 'required | in:public,private',
 
-                'id_user' => 'required | exists:users,id'
+                'user.id' => 'required | exists:users,id'
                 
             ]);
             return $validation;
@@ -64,7 +65,8 @@ class GroupsController extends Controller
         $Group->save();
 
         $Integrates = new  IntegratesController();
-        $Integrate =  $Integrates -> createAdmin($request->post("id_user"), $Group->id_group);
+        
+        $Integrate =  $Integrates -> createAdmin($request->input('user.id'), $Group->id_group);
 
         return response()->json([$Group, $Integrate], 201);
 
