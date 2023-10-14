@@ -165,6 +165,7 @@ return [
         /*
          * Package Service Providers...
          */
+        Musonza\Chat\ChatServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -199,6 +200,7 @@ return [
         'Bus' => Illuminate\Support\Facades\Bus::class,
         'Cache' => Illuminate\Support\Facades\Cache::class,
         'Config' => Illuminate\Support\Facades\Config::class,
+        'Chat' => Musonza\Chat\Facades\ChatFacade::class,
         'Cookie' => Illuminate\Support\Facades\Cookie::class,
         'Crypt' => Illuminate\Support\Facades\Crypt::class,
         'Date' => Illuminate\Support\Facades\Date::class,
