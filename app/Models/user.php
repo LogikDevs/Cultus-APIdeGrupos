@@ -12,12 +12,28 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Musonza\Chat\Traits\Messageable;
 
 class user extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes, Messageable;
     protected $table = "users";
-    
+    protected $fillable = [
+        'id', 
+        'name',
+        'email',
+        'surname',
+        'age',
+        'gender',
+        'password',
+        'profile_pic',
+        'description',
+        'homeland',
+        'residence',
+        'created_at',
+        'updated_at',
+        'deleted_at'
+    ];
     public function homeland(): BelongsTo
     {
         return $this->belongsTo(country::class, 'homeland');
