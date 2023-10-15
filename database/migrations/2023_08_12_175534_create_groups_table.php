@@ -15,7 +15,8 @@ class CreateGroupsTable extends Migration
             $table->string("description")->nullable();
             $table->string("picture")->nullable();
             $table->string("privacy")->default('Public');
-           
+            $table->unsignedBigInteger("id_chat");
+            $table->foreign("id_chat")->references("id")->on("chat_conversations"); 
             $table->timestamps();
             $table->softDeletes();
         });

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\groups;
 use App\Http\Controllers\IntegratesController;
+use App\Http\Controllers\ChatController;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
@@ -27,8 +28,9 @@ class GroupsController extends Controller
 
         if ($validation->fails())
         return $validation->errors();
-    
-        return $this -> CreateRequest($request);
+        $Chat = new  ChatController();
+        $Chat = $Chat->CreateChat($request);
+        return response()->json([$this -> CreateRequest($request, $Chat), $Chat], 201);
     }
 
     public function CreateValidation(request $request){
@@ -45,7 +47,7 @@ class GroupsController extends Controller
             return $validation;
     }
 
-    public function CreateRequest(request $request){
+    public function CreateRequest(request $request, $Chat){
 
         try {
         DB::raw('LOCK TABLE groups WRITE');
@@ -56,7 +58,7 @@ class GroupsController extends Controller
         $Group->name = $request->post("name");
         $Group -> description = $request ->post("description");
         $Group -> privacy = $request ->post("privacy");
-        
+        $Group -> id_chat = $Chat -> id;
         if ($request->file("picture")){
             
         $path = $request->file('picture')->store('/public/picture');
@@ -80,9 +82,7 @@ class GroupsController extends Controller
         catch (\PDOException $th) {
             return response("Permission to DB denied",403);
 
-        }
-
-      
+        }      
     }
 
     public function EditName(request $request){
