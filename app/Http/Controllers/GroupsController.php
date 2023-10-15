@@ -30,7 +30,7 @@ class GroupsController extends Controller
         return $validation->errors();
         $Chat = new  ChatController();
         $Chat = $Chat->CreateChat($request);
-        return response()->json([$this -> CreateRequest($request), $Chat], 201);
+        return response()->json([$this -> CreateRequest($request, $Chat), $Chat], 201);
     }
 
     public function CreateValidation(request $request){
@@ -47,7 +47,7 @@ class GroupsController extends Controller
             return $validation;
     }
 
-    public function CreateRequest(request $request){
+    public function CreateRequest(request $request, $Chat){
 
         try {
         DB::raw('LOCK TABLE groups WRITE');
@@ -58,7 +58,7 @@ class GroupsController extends Controller
         $Group->name = $request->post("name");
         $Group -> description = $request ->post("description");
         $Group -> privacy = $request ->post("privacy");
-        
+        $Group -> id_chat = $Chat -> id;
         if ($request->file("picture")){
             
         $path = $request->file('picture')->store('/public/picture');
