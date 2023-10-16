@@ -16,8 +16,8 @@ class integrates extends Model
         return $this->belongsTo(user::class, 'id_user');
     }
 
-    public function id_group(): BelongsTo
+    public function group(): BelongsTo
     {
-        return $this->belongsTo(groups::class, 'id_group');
+        return $this->belongsTo(groups::class, 'id_group', 'id_group');
     }
 }
