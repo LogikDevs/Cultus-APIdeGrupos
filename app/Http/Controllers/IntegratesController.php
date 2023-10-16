@@ -18,4 +18,9 @@ class IntegratesController extends Controller
         $Integrates -> save();
         return $Integrates;
     }
+
+    public function ListUserGroups($User){
+        $Integrates = integrates::with('group')->get()->where('id_user', $User->id);
+        return $Integrates;
+    }
 }
