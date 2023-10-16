@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\groups;
+use App\Models\user;
+use App\Models\integrates;
 use App\Http\Controllers\IntegratesController;
 use App\Http\Controllers\ChatController;
 use Illuminate\Support\Facades\Validator;
@@ -13,13 +15,30 @@ use Illuminate\Support\Facades\DB;
 class GroupsController extends Controller
 {
 
+    public function GetUser(request $request){
+        $userData = $request->user;
+        $user = new User();
+        $user->fill($userData);
+        return $user;
+    }
+
     public function ListAll(){
         return groups::all();
     }
 
-
     public function ListOne($id){
         return groups::findOrFail($id);
+    }
+
+    public function ListUserGroups(request $request){
+        $User = self::GetUser($request);
+        $Integrate = new IntegratesController();
+        $Integrates = $Integrate->ListUserGroups($User);
+        
+        $groups = $Integrates->map(function ($integrate) {
+            return $integrate->group;
+        })->all();
+        return $groups;
     }
 
     public function Create(request $request){
@@ -70,10 +89,10 @@ class GroupsController extends Controller
         
         $Integrate =  $Integrates -> createAdmin($request->input('user.id'), $Group->id_group);
 
-        return response()->json([$Group, $Integrate], 201);
-
         DB::commit();
         DB::raw('UNLOCK TABLES');
+
+        return response()->json([$Group, $Integrate], 201);
     }
         catch (\Illuminate\Database\QueryException $th) {
             DB::rollback();
