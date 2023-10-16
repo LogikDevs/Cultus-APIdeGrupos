@@ -17,4 +17,5 @@ Route::prefix('v1')->middleware(Autenticacion::class)->group(function(){
     Route::post("/group", [GroupsController::class, "Create"]);
     Route::put("/group/name", [GroupsController::class, "EditName"]);
 
+    Route::post("/message", [ChatController::class, "SendMessage"]);
 });
