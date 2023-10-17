@@ -11,7 +11,7 @@ class integrates extends Model
     use HasFactory;
     use SoftDeletes;
 
-    public function id_user(): BelongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo(user::class, 'id_user');
     }
