@@ -18,6 +18,7 @@ class user extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, SoftDeletes, Messageable;
     protected $table = "users";
+    protected $hidden = ['password'];
     protected $fillable = [
         'id', 
         'name',
