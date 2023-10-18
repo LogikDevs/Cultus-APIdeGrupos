@@ -10,7 +10,7 @@ class integrates extends Model
 {
     use HasFactory;
     use SoftDeletes;
-
+    protected $primaryKey = 'id_integrates';
     public function user(): BelongsTo
     {
         return $this->belongsTo(user::class, 'id_user');
