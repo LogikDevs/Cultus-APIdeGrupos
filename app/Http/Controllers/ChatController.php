@@ -16,7 +16,7 @@ class ChatController extends Controller
     }
     public function CheckUserGroup($user, $conversation){
         $conversations = Chat::conversations()->setParticipant($user)->get()->where('conversation_id', $conversation->id);
-        if(!$conversations->isEmpty()){
+        if(!$conversations->isEmpty()){ //cambiarlo a return !conversations->isEmpty() (porfavor que cringe)
         return true;
         }
         return false;

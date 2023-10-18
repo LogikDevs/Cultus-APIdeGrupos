@@ -24,6 +24,11 @@ class IntegratesController extends Controller
         return $Integrates;
     }
 
+    public function UserIntegrate($User, $Id){
+        $Integrate = integrates::get()->where('id_user', $User->id)->where('id_group', $Id)->first();
+        return $Integrate;
+    }
+
     public function ListGroupIntegrates($Id){
         $Integrates = integrates::with('user')->get()->where('id_group', $Id);
 
