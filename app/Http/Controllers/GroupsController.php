@@ -85,8 +85,7 @@ class GroupsController extends Controller
         }
         $Group->save();
 
-        $Integrates = new  IntegratesController();
-        
+        $Integrates = new  IntegratesController();     
         $Integrate =  $Integrates -> createAdmin($request->input('user.id'), $Group->id_group);
 
         DB::commit();
@@ -141,5 +140,38 @@ class GroupsController extends Controller
         }
     }
 
+    public function LeaveGroup(request $request, $id){
+        $group = self::LeaveGroupValidation($id);
+        $user = self::GetUser($request);
+        $Integrates = new  IntegratesController();       
+        $Integrate =  $Integrates -> UserIntegrate($user, $id);
+        if (!$Integrate){
+            return "User is not part of this group";    
+        }
+        return self::LeaveGroupRequest($Integrate);
+    }
 
+    public function LeaveGroupValidation($id){
+         $group = groups::findOrFail($id);
+        }
+
+    public function LeaveGroupRequest($Integrate){
+        try {
+            DB::raw('LOCK TABLE integrates WRITE');
+            DB::beginTransaction();
+
+            $Integrate->delete(); 
+            DB::commit();
+            DB::raw('UNLOCK TABLES');
+            return ["response" => "User has left the group"];
+        }
+        catch (\Illuminate\Database\QueryException $th) {
+            DB::rollback();
+            return $th->getMessage();
+        }
+        catch (\PDOException $th) {
+            return response("Permission to DB denied",403);
+
+        }      
+    }
 }
