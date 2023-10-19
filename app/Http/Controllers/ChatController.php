@@ -16,10 +16,7 @@ class ChatController extends Controller
     }
     public function CheckUserGroup($user, $conversation){
         $conversations = Chat::conversations()->setParticipant($user)->get()->where('conversation_id', $conversation->id);
-        if(!$conversations->isEmpty()){ //cambiarlo a return !conversations->isEmpty() (porfavor que cringe)
-        return true;
-        }
-        return false;
+        return !$conversations->isEmpty();
     }
     public function CreateChat(request $request){
         $user = self::user($request);
@@ -28,8 +25,7 @@ class ChatController extends Controller
         return $conversation;
     }
     
-    public function ListOneConversation(request $request){
-        $id = $request->post("id_chat");
+    public function ListOneConversation($id){
         $conversation = Chat::conversations()->getById($id); 
         return $conversation;
     }
@@ -43,7 +39,8 @@ class ChatController extends Controller
 
     public function SendMessage(request $request){
         $user = self::user($request);
-        $conversation = self::ListOneConversation($request);
+        $idChat = $request->post("id_chat");
+        $conversation = self::ListOneConversation($idChat);
         if (!$conversation){
             return "Conversation does not exist";
         }
@@ -68,6 +65,17 @@ class ChatController extends Controller
             return response($message, 201);
     }
 
+    public function GetChat($Id, request $request){
+        $conversation = self::ListOneConversation($Id);
+        if (!$conversation){
+            return "Conversation does not exist";
+        }
+        $user = self::user($request);
+        if (!self::CheckUserGroup($user, $conversation)){
+            return "User is not part of this conversation";
+        } 
+        return chat::conversation($conversation)->setParticipant($user)->getMessages();
+    }
 /*
     public function ChatData(request $request, $conversation){
         $data = ['name' => $request->post("name"), 'description' => $request->post("description")];
