@@ -17,7 +17,8 @@ Route::prefix('v1')->middleware(Autenticacion::class)->group(function(){
     Route::get("/group", [GroupsController::class, "ListAll"]);
     Route::post("/group", [GroupsController::class, "Create"]);
     Route::put("/group/name", [GroupsController::class, "EditName"]);
-
+    
+    Route::get("/chat/{d}", [ChatController::class, "GetChat"]);
     Route::post("/message", [ChatController::class, "SendMessage"]);
     Route::get("/chats", [GroupsController::class, "ListUserGroups"]);
     Route::get("/integrates/{d}", [IntegratesController::class, "ListGroupIntegrates"]);
