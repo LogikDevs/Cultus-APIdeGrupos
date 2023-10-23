@@ -37,6 +37,10 @@ class ChatController extends Controller
         return $validation;
 }
 
+    public function FindMessage($id){
+        return $message = Chat::messages()->getById($id);
+    }
+
     public function SendMessage(request $request){
         $user = self::user($request);
         $idChat = $request->post("id_chat");
@@ -63,6 +67,19 @@ class ChatController extends Controller
             ->send();
  
             return response($message, 201);
+    }
+
+    public function DeleteMessage($id, request $request){
+        $user = self::user($request);
+        $message = self::FindMessage($id);
+        if ($message->sender->id != $user->id){
+            return "User must be sender to delete";
+        }
+        if($message){
+            $message->delete();
+            return response("Message deleted succesfully", 201);
+        }
+        return "Message not found";
     }
 
     public function GetChat($Id, request $request){

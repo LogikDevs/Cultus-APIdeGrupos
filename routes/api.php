@@ -20,6 +20,7 @@ Route::prefix('v1')->middleware(Autenticacion::class)->group(function(){
     
     Route::get("/chat/{d}", [ChatController::class, "GetChat"]);
     Route::post("/message", [ChatController::class, "SendMessage"]);
+    Route::delete("/message/{d}", [ChatController::class, "DeleteMessage"]);
     Route::get("/chats", [GroupsController::class, "ListUserGroups"]);
     Route::get("/integrates/{d}", [IntegratesController::class, "ListGroupIntegrates"]);
     Route::get("/leave/{d}", [GroupsController::class, "LeaveGroup"]);
