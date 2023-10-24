@@ -7,9 +7,6 @@ use App\Http\Controllers\ChatController;
 use App\Http\Controllers\IntegratesController;
 use App\Http\Middleware\Autenticacion;
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
 
 Route::prefix('v1')->middleware(Autenticacion::class)->group(function(){
 
@@ -17,7 +14,7 @@ Route::prefix('v1')->middleware(Autenticacion::class)->group(function(){
     Route::get("/group", [GroupsController::class, "ListAll"]);
     Route::post("/group", [GroupsController::class, "Create"]);
     Route::put("/group/name", [GroupsController::class, "EditName"]);
-    
+    Route::post("/group/join", [IntegratesController::class, "JoinGroup"]);
     Route::get("/chat/{d}", [ChatController::class, "GetChat"]);
     Route::post("/message", [ChatController::class, "SendMessage"]);
     Route::delete("/message/{d}", [ChatController::class, "DeleteMessage"]);

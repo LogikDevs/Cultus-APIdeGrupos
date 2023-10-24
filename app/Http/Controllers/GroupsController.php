@@ -16,9 +16,8 @@ class GroupsController extends Controller
 {
 
     public function GetUser(request $request){
-        $userData = $request->user;
         $user = new User();
-        $user->fill($userData);
+        $user->fill($request->user);
         return $user;
     }
 
@@ -86,7 +85,7 @@ class GroupsController extends Controller
         $Group->save();
 
         $Integrates = new  IntegratesController();     
-        $Integrate =  $Integrates -> createAdmin($request->input('user.id'), $Group->id_group);
+        $Integrate =  $Integrates -> JoinGroupRequest($request->input('user.id'), $Group->id_group, "Admin");
 
         DB::commit();
         DB::raw('UNLOCK TABLES');
