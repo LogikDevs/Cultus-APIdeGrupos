@@ -92,8 +92,24 @@ class ChatController extends Controller
             return "Message not found";
             
         }
-        $message->delete();
-        return response("Message deleted succesfully", 201);
+        try {
+            DB::raw('LOCK TABLE chat_messages WRITE');
+            DB::beginTransaction();
+            
+            $message->delete();
+           
+            DB::commit();
+            DB::raw('UNLOCK TABLES');
+            return response("Message deleted succesfully", 201);
+        }
+        catch (\Illuminate\Database\QueryException $th) {
+            DB::rollback();
+            return $th->getMessage();
+        }
+        catch (\PDOException $th) {
+            return response("Permission to DB denied",403);
+
+        }      
     }
 
     public function GetChat($Id, request $request){
