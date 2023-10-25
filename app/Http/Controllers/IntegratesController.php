@@ -42,8 +42,24 @@ class IntegratesController extends Controller
         $Integrates -> id_group = $id_group;
         $Integrates -> rol = $rol;
 
-        $Integrates -> save();
-        return $Integrates;
+        try {
+            DB::raw('LOCK TABLE integrates WRITE');
+            DB::beginTransaction();
+             $Integrates -> save();
+            DB::commit();
+            DB::raw('UNLOCK TABLES');
+             return $Integrates;
+        
+             
+        }
+        catch (\Illuminate\Database\QueryException $th) {
+            DB::rollback();
+            return $th->getMessage();
+        }
+        catch (\PDOException $th) {
+            return response("Permission to DB denied",403);
+
+        }
     }
 
     public function ListUserGroups($User){
@@ -69,4 +85,23 @@ class IntegratesController extends Controller
         })->all();
         return $users;
     }
+
+    /*
+    try {
+            DB::raw('LOCK TABLE integrates WRITE');
+            DB::beginTransaction();
+            //codigo
+            DB::commit();
+            DB::raw('UNLOCK TABLES');
+            return ["response" => "respuesta", codigo];
+        }
+        catch (\Illuminate\Database\QueryException $th) {
+            DB::rollback();
+            return $th->getMessage();
+        }
+        catch (\PDOException $th) {
+            return response("Permission to DB denied",403);
+
+        }
+    */
 }

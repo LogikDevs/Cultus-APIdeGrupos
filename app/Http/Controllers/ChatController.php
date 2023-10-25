@@ -137,22 +137,5 @@ class ChatController extends Controller
         } 
         return chat::conversation($conversation)->setParticipant($user)->getMessages();
     }
-/*
-    try {
-            DB::raw('LOCK TABLE integrates WRITE');
-            DB::beginTransaction();
-            //codigo
-            DB::commit();
-            DB::raw('UNLOCK TABLES');
-            return ["response" => "succesfull"];
-        }
-        catch (\Illuminate\Database\QueryException $th) {
-            DB::rollback();
-            return $th->getMessage();
-        }
-        catch (\PDOException $th) {
-            return response("Permission to DB denied",403);
 
-        }      
-    */
 }
