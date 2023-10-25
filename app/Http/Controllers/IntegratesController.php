@@ -48,9 +48,7 @@ class IntegratesController extends Controller
              $Integrates -> save();
             DB::commit();
             DB::raw('UNLOCK TABLES');
-             return $Integrates;
-        
-             
+             return $Integrates;                     
         }
         catch (\Illuminate\Database\QueryException $th) {
             DB::rollback();
@@ -58,7 +56,6 @@ class IntegratesController extends Controller
         }
         catch (\PDOException $th) {
             return response("Permission to DB denied",403);
-
         }
     }
 
