@@ -170,7 +170,6 @@ class GroupsController extends Controller
         }
         catch (\PDOException $th) {
             return response("Permission to DB denied",403);
-
         }      
     }
 }
