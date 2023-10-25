@@ -21,8 +21,22 @@ class ChatController extends Controller
     public function CreateChat(request $request){
         $user = self::user($request);
         $participants = [$user];
-        $conversation = Chat::createConversation($participants)->makePrivate(false);
-        return $conversation;
+        try {
+            DB::raw('LOCK TABLE integrates WRITE');
+            DB::beginTransaction();
+             $conversation = Chat::createConversation($participants)->makePrivate(false);
+        
+            DB::commit();
+            DB::raw('UNLOCK TABLES');
+            return $conversation;
+        }
+        catch (\Illuminate\Database\QueryException $th) {
+            DB::rollback();
+            return $th->getMessage();
+        }
+        catch (\PDOException $th) {
+            return response("Permission to DB denied",403);
+        }      
     }
     
     public function ListOneConversation($id){
