@@ -61,25 +61,39 @@ class ChatController extends Controller
     }
     
     public function SendMessageRequest($text, $user, $conversation){ 
+        try {
+            DB::raw('LOCK TABLE chat_messages WRITE');
+            DB::beginTransaction();
         $message = Chat::message($text)
             ->from($user)
             ->to($conversation)
             ->send();
- 
+            DB::commit();
+            DB::raw('UNLOCK TABLES');
             return response($message, 201);
-    }
+        }
+        catch (\Illuminate\Database\QueryException $th) {
+            DB::rollback();
+            return $th->getMessage();
+        }
+        catch (\PDOException $th) {
+            return response("Permission to DB denied",403);
+        }      
+        }
 
     public function DeleteMessage($id, request $request){
+        
         $user = self::user($request);
         $message = self::FindMessage($id);
         if ($message->sender->id != $user->id){
             return "User must be sender to delete";
         }
-        if($message){
-            $message->delete();
-            return response("Message deleted succesfully", 201);
+        if(!$message){
+            return "Message not found";
+            
         }
-        return "Message not found";
+        $message->delete();
+        return response("Message deleted succesfully", 201);
     }
 
     public function GetChat($Id, request $request){
@@ -94,9 +108,21 @@ class ChatController extends Controller
         return chat::conversation($conversation)->setParticipant($user)->getMessages();
     }
 /*
-    public function ChatData(request $request, $conversation){
-        $data = ['name' => $request->post("name"), 'description' => $request->post("description")];
-        $conversation->update(['data' => $data]);
-    }
+    try {
+            DB::raw('LOCK TABLE integrates WRITE');
+            DB::beginTransaction();
+            //codigo
+            DB::commit();
+            DB::raw('UNLOCK TABLES');
+            return ["response" => "succesfull"];
+        }
+        catch (\Illuminate\Database\QueryException $th) {
+            DB::rollback();
+            return $th->getMessage();
+        }
+        catch (\PDOException $th) {
+            return response("Permission to DB denied",403);
+
+        }      
     */
 }
