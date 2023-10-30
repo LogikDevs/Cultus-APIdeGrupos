@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\user;
 use Chat;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 class ChatController extends Controller
 {
     public function user(request $request){
@@ -124,6 +125,7 @@ class ChatController extends Controller
             return response("Permission to DB denied",403);
 
         }      
+
     }
 
     public function GetChat($Id, request $request){
@@ -153,7 +155,29 @@ class ChatController extends Controller
 
         $participant = user::findOrFail($request->post("id_user"));
         $participants = [$user, $participant];
-        return $conversation = Chat::createConversation($participants)->makeDirect();
+        try{
+            DB::raw('LOCK TABLE chat_conversations WRITE');
+            DB::beginTransaction();
+             return $conversation = Chat::createConversation($participants)->makeDirect();
+            DB::commit();
+            DB::raw('UNLOCK TABLES');
+        }
+        catch (\Musonza\Chat\Exceptions\DirectMessagingExistsException $th) {
+            DB::rollback();
+             return response("Conversation already exists", 200);
+        }
+        catch (\Illuminate\Database\QueryException $th) {
+            DB::rollback();
+             return $th->getMessage();
+        }
+        catch (\PDOException $th) {
+            return response("Permission to DB denied",403);
+        }
+    }
+
+    public function ListUserDirectChats(request $request){
+        $user = self::user($request);
+        return Chat::conversations()->setParticipant($user)->isDirect()->get();
     }
 
 }
