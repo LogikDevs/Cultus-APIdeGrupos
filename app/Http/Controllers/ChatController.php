@@ -138,4 +138,22 @@ class ChatController extends Controller
         return chat::conversation($conversation)->setParticipant($user)->getMessages();
     }
 
+    public function DirectChatValidation(request $request){
+        $validation = Validator::make($request->all(),[
+            'id_user'=>'required | integer | exists:users,id'
+        ]);
+        return $validation;
+    }
+
+    public function createDirectChat(request $request){
+        $user = self::user($request);
+        $validation = self::DirectChatValidation($request);
+        if ($validation->fails())
+        return $validation->errors();
+
+        $participant = user::findOrFail($request->post("id_user"));
+        $participants = [$user, $participant];
+        return $conversation = Chat::createConversation($participants)->makeDirect();
+    }
+
 }
