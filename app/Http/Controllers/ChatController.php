@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\user;
 use Chat;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 class ChatController extends Controller
 {
     public function user(request $request){
@@ -124,6 +125,7 @@ class ChatController extends Controller
             return response("Permission to DB denied",403);
 
         }      
+
     }
 
     public function GetChat($Id, request $request){
@@ -136,6 +138,46 @@ class ChatController extends Controller
             return "User is not part of this conversation";
         } 
         return chat::conversation($conversation)->setParticipant($user)->getMessages();
+    }
+
+    public function DirectChatValidation(request $request){
+        $validation = Validator::make($request->all(),[
+            'id_user'=>'required | integer | exists:users,id'
+        ]);
+        return $validation;
+    }
+
+    public function createDirectChat(request $request){
+        $user = self::user($request);
+        $validation = self::DirectChatValidation($request);
+        if ($validation->fails())
+        return $validation->errors();
+
+        $participant = user::findOrFail($request->post("id_user"));
+        $participants = [$user, $participant];
+        try{
+            DB::raw('LOCK TABLE chat_conversations WRITE');
+            DB::beginTransaction();
+             return $conversation = Chat::createConversation($participants)->makeDirect();
+            DB::commit();
+            DB::raw('UNLOCK TABLES');
+        }
+        catch (\Musonza\Chat\Exceptions\DirectMessagingExistsException $th) {
+            DB::rollback();
+             return response("Conversation already exists", 200);
+        }
+        catch (\Illuminate\Database\QueryException $th) {
+            DB::rollback();
+             return $th->getMessage();
+        }
+        catch (\PDOException $th) {
+            return response("Permission to DB denied",403);
+        }
+    }
+
+    public function ListUserDirectChats(request $request){
+        $user = self::user($request);
+        return Chat::conversations()->setParticipant($user)->isDirect()->get();
     }
 
 }
