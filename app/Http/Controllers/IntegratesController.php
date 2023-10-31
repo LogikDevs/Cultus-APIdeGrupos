@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\integrates;
 use App\Models\user;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 class IntegratesController extends Controller
 {
     public function GetUser(request $request){
