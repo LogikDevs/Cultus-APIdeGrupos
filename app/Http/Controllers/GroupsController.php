@@ -143,7 +143,7 @@ class GroupsController extends Controller
         $group = self::LeaveGroupValidation($id);
         $user = self::GetUser($request);
         $Integrates = new  IntegratesController();       
-        $Integrate =  $Integrates -> UserIntegrate($user, $id);
+        $Integrate =  $Integrates -> UserIntegrate($user->id, $id);
         if (!$Integrate){
             return "User is not part of this group";    
         }
@@ -162,6 +162,7 @@ class GroupsController extends Controller
             $Integrate->delete(); 
             DB::commit();
             DB::raw('UNLOCK TABLES');
+
             return ["response" => "User has left the group"];
         }
         catch (\Illuminate\Database\QueryException $th) {
