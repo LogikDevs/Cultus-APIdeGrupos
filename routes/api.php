@@ -23,6 +23,7 @@ Route::prefix('v1')->middleware(Autenticacion::class)->group(function(){
     
     Route::get("/integrates/{d}", [IntegratesController::class, "ListGroupIntegrates"]);
     Route::get("/leave/{d}", [GroupsController::class, "LeaveGroup"]);
+    Route::post("/integrate/{d}", [IntegratesController::class, "ExpelUser"]);
 
     Route::post("/chat/direct", [ChatController::class, "createDirectChat"]);
     Route::get("/chat/get/direct", [ChatController::class, "ListUserDirectChats"]);

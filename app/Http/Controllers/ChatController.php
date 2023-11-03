@@ -180,4 +180,28 @@ class ChatController extends Controller
         return Chat::conversations()->setParticipant($user)->isDirect()->get();
     }
 
+    public function ExpelUser($id_chat, $id_user){
+        $user = user::findOrFail($id_user);
+        $conversation = self::ListOneConversation($id_chat);
+        if (!$conversation){
+            return "Conversation does not exist";
+        }
+        try {
+            DB::raw('LOCK TABLE chat_participation WRITE');
+            DB::beginTransaction();
+            $conversation->removeParticipant([$user]);         
+            DB::commit();
+            DB::raw('UNLOCK TABLES');
+
+        }
+        catch (\Illuminate\Database\QueryException $th) {
+            DB::rollback();
+            return $th->getMessage();
+        }
+        catch (\PDOException $th) {
+            return response("Permission to DB denied",403);
+        }      
+    }
+
+
 }
