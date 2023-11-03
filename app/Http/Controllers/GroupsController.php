@@ -31,13 +31,15 @@ class GroupsController extends Controller
 
     public function ListUserGroups(request $request){
         $User = self::GetUser($request);
-        $Integrate = new IntegratesController();
-        $Integrates = $Integrate->ListUserGroups($User);
-        
-        $groups = $Integrates->map(function ($integrate) {
-            return $integrate->group;
-        })->all();
-        return response()->json($groups);
+        $Integrates = new  IntegratesController();
+        $Integrates = $Integrates -> ListUserGroups($User);
+        $Groups = array();
+        foreach ($Integrates as $Integrate){
+            $Group = groups::findOrFail($Integrate->id_group);
+            array_push($Groups, $Group);
+        }
+        return $Groups;
+
     }
 
     public function Create(request $request){
