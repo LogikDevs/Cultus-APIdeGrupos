@@ -37,7 +37,7 @@ class GroupsController extends Controller
         $groups = $Integrates->map(function ($integrate) {
             return $integrate->group;
         })->all();
-        return $groups;
+        return response()->json($groups);
     }
 
     public function Create(request $request){
