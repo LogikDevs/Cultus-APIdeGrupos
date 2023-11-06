@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\integrates;
 use App\Models\user;
 use App\Models\groups;
+use App\Http\Controllers\ChatController;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 class IntegratesController extends Controller
@@ -24,9 +25,11 @@ class IntegratesController extends Controller
        
         $user = self::GetUser($request);
         $group = self::CheckUserGroup($user->id, $request->post("id_group"));
-        if ($group->isEmpty())
-        return response()->json(self::JoinGroupRequest($user->id, $request->post("id_group"), "Member"), 201);
-
+        if ($group->isEmpty()){
+            $Group = new Groups();      
+            $Group = $Group::findOrFail($request->post("id_group"));
+            return response()->json(self::JoinGroupRequest($user->id, $request->post("id_group"), $Group->id_chat, "Member", $request));
+        }
         return "User is already part of the group";
     }
 
@@ -37,20 +40,28 @@ class IntegratesController extends Controller
         return $validation;
     }
 
-    public function JoinGroupRequest(int $id_user, int $id_group, string $rol){
+    public function JoinGroupRequest(int $id_user, int $id_group, int $id_chat, string $rol, request $request){
         $Integrates = new integrates();
 
         $Integrates -> id_user = $id_user;
         $Integrates -> id_group = $id_group;
         $Integrates -> rol = $rol;
 
+        $Chat = new ChatController();      
+        
         try {
             DB::raw('LOCK TABLE integrates WRITE');
             DB::beginTransaction();
              $Integrates -> save();
-            DB::commit();
-            DB::raw('UNLOCK TABLES');
-             return $Integrates;                     
+            if ($Chat->JoinChat($id_chat, $request)){
+                DB::commit();
+                DB::raw('UNLOCK TABLES');
+                return $Integrates;
+            }
+            else{
+                DB::rollback();
+                return response("Error joining chat", 405);
+            }                    
         }
         catch (\Illuminate\Database\QueryException $th) {
             DB::rollback();
