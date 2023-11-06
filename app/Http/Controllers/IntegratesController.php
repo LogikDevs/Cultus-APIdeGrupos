@@ -90,10 +90,16 @@ class IntegratesController extends Controller
     public function ListGroupIntegrates($Id){
         $Integrates = integrates::with('user')->get()->where('id_group', $Id);
 
-        $users = $Integrates->map(function ($integrate) {
-            return $integrate->user;
-        })->all();
-        return $users;
+        //check integrates is not empty
+        if ($Integrates->isEmpty())
+        return response()->json("Group is empty or not valid", 405);
+
+        $Users = array();
+        foreach ($Integrates as $Integrate){
+            array_push($Users, $Integrate->user);
+        }
+        return $Users;
+
     }
 
     public function ValidateAdmin($User, $Id){
