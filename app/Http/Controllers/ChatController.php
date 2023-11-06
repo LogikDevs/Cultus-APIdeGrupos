@@ -40,6 +40,33 @@ class ChatController extends Controller
         }      
     }
     
+    public function JoinChat($id, request $request){
+        $user = self::user($request);
+        $conversation = self::ListOneConversation($id);
+        if (!$conversation){
+            return "Conversation does not exist";
+        }
+        if (self::CheckUserGroup($user, $conversation)){
+            return "User is already part of this conversation";
+        } 
+        try {
+            DB::raw('LOCK TABLE chat_participation WRITE');
+            DB::beginTransaction();
+                Chat::conversation($conversation)->addParticipants([$user]);         
+            DB::commit();
+            DB::raw('UNLOCK TABLES');
+            return true;
+        }
+        catch (\Illuminate\Database\QueryException $th) {
+            DB::rollback();
+            return $th->getMessage();
+        }
+        catch (\PDOException $th) {
+            return response("Permission to DB denied",403);
+        }      
+    }
+    
+
     public function ListOneConversation($id){
         $conversation = Chat::conversations()->getById($id); 
         return $conversation;
