@@ -87,7 +87,7 @@ class GroupsController extends Controller
         $Group->save();
 
         $Integrates = new  IntegratesController();     
-        $Integrate =  $Integrates -> JoinGroupRequest($request->input('user.id'), $Group->id_group, "Admin");
+        $Integrate =  $Integrates -> JoinGroupRequest($request->input('user.id'), $Group->id_group, $Group->id_chat, "Admin", $request);
 
         DB::commit();
         DB::raw('UNLOCK TABLES');
