@@ -185,9 +185,10 @@ class ChatController extends Controller
         try{
             DB::raw('LOCK TABLE chat_conversations WRITE');
             DB::beginTransaction();
-             return $conversation = Chat::createConversation($participants)->makeDirect();
+            $conversation = Chat::createConversation($participants)->makeDirect();
             DB::commit();
             DB::raw('UNLOCK TABLES');
+            return response ($conversation, 201);
         }
         catch (\Musonza\Chat\Exceptions\DirectMessagingExistsException $th) {
             DB::rollback();
