@@ -50,7 +50,7 @@ class GroupsController extends Controller
         return $validation->errors();
         $Chat = new  ChatController();
         $Chat = $Chat->CreateChat($request);
-        return response()->json([$this -> CreateRequest($request, $Chat), $Chat], 201);
+        return response([$this -> CreateRequest($request, $Chat), $Chat], 201);
     }
 
     public function CreateValidation(request $request){
@@ -92,7 +92,7 @@ class GroupsController extends Controller
         DB::commit();
         DB::raw('UNLOCK TABLES');
 
-        return response()->json([$Group, $Integrate], 201);
+        return ([$Group, $Integrate]);
     }
         catch (\Illuminate\Database\QueryException $th) {
             DB::rollback();
