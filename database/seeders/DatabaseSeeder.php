@@ -18,16 +18,5 @@ class DatabaseSeeder extends Seeder
         $this->call(chatSeeder::class);
         $this->call(groupsSeeder::class);
         $this->call(integratesSeeder::class);
-        $this->call(userSeeder::class);
-        Client::create([
-            'id' => 100,
-            'name' => 'Tests',
-            'secret' => "wsBa0mp4jwSTYssUGHX5xoqD9IC0X95Gfpg0w3uY",
-            'redirect' => 'http://localhost',
-            'provider' => 'users',
-            'personal_access_client' => false,
-            'password_client' => true,
-            'revoked' => false
-        ]);
     }
 }
