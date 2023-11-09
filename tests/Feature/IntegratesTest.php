@@ -93,4 +93,22 @@ class IntegratesTest extends TestCase
         ]);
         $response -> assertStatus(405);
     }
+
+    public function test_JoinGroupGoodRequest(){
+        $response = $this->withHeaders(['Authorization' => 'Bearer ' . $this->BearerToken])->post('/api/v1/group/join',
+        [
+            "id_group" => 1,
+        ]);
+        $response -> assertStatus(201);
+    }
+
+    public function test_JoinGroupBadRequest(){
+        $response = $this->withHeaders(['Authorization' => 'Bearer ' . $this->BearerToken])->post('/api/v1/group/join',
+        [
+            "id_group" => "aa",
+        ]);
+        $response -> assertStatus(200);
+    }
+
+    
 }
