@@ -28,14 +28,14 @@ class IntegratesController extends Controller
         if ($group->isEmpty()){
             $Group = new Groups();      
             $Group = $Group::findOrFail($request->post("id_group"));
-            return response()->json(self::JoinGroupRequest($user->id, $request->post("id_group"), $Group->id_chat, "Member", $request));
+            return response()->json(self::JoinGroupRequest($user->id, $request->post("id_group"), $Group->id_chat, "Member", $request), 201);
         }
-        return "User is already part of the group";
+        return response ("User is already part of the group", 405);
     }
 
     public function JoinGroupValidation(request $request){
         $validation = Validator::make($request->all(),[
-            'id_group'=> 'required | exists:groups,id_group',
+            'id_group'=> 'required | integer | exists:groups,id_group',
         ]);
         return $validation;
     }
