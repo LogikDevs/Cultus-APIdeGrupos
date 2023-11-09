@@ -8,4 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class chat_participation extends Model
 {
     use HasFactory;
+    protected $table = 'chat_participation';
 }
