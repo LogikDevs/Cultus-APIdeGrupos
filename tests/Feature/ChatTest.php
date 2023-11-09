@@ -80,4 +80,27 @@ class ChatTest extends TestCase
         $response = $this->withHeaders(['Authorization' => 'Bearer ' . $this->BearerToken])->delete('/api/v1/message/' . $id);
         $response->assertStatus(201);  
     }
+
+    public function test_DeleteMessageBadRequest(){
+        $response = $this->withHeaders(['Authorization' => 'Bearer ' . $this->BearerToken])->delete('/api/v1/message/11111111111');
+        $response->assertStatus(404);   
+    }
+
+    
+    public function test_createDirectChatGoodRequest(){
+        $response = $this->withHeaders(['Authorization' => 'Bearer ' . $this->BearerToken])->post('/api/v1/chat/direct', [
+            'id_user' => 1,
+        ]);
+        $response->assertStatus(201);  
+    }
+
+    public function test_createDirectChatBadRequest(){
+        $response = $this->withHeaders(['Authorization' => 'Bearer ' . $this->BearerToken])->post('/api/v1/chat/direct', [
+            'id_user' => 11111111111,
+        ]);
+        $response->assertStatus(200);
+        $response->assertJsonFragment([
+            'id_user' => ['The selected id user is invalid.'],
+        ]);
+    }
 }
