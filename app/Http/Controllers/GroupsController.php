@@ -176,10 +176,4 @@ class GroupsController extends Controller
             return response("Permission to DB denied",403);
         }      
     }
-
-    public function ListGroupPosts($id){
-        $Group = groups::findOrFail($id);
-        $Posts = $Group->posts()->get();
-        return $Posts;
-    }
 }
