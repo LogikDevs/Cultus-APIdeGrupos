@@ -103,4 +103,18 @@ class ChatTest extends TestCase
             'id_user' => ['The selected id user is invalid.'],
         ]);
     }
+
+
+    public function test_getDirectChatGoodRequest(){
+        $response = $this->withHeaders(['Authorization' => 'Bearer ' . $this->BearerToken])->get('/api/v1/chat/get/direct');
+        $response->assertStatus(200);
+        $response->assertJsonFragment([
+            'messageable_id' => 11,
+        ]);  
+    }
+
+    public function test_getDirectChatBadRequest(){
+        $response = $this->get('/api/v1/chat/get/direct');
+        $response->assertStatus(403);  
+    }
 }
