@@ -10,7 +10,11 @@ class chatSeeder extends Seeder
     public function run()
     {
         \App\Models\chat::factory()
-        ->count(100)
-        ->create();     
+        ->count(105)
+        ->create();
+        \App\Models\chat_participation::factory()->create([
+            "conversation_id" => "100",
+            "messageable_id" => "11",
+        ]);       
     }
 }

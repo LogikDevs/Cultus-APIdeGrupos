@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 class groups extends Model
 {
     use HasFactory;
@@ -17,4 +18,10 @@ class groups extends Model
     {
         return $this->belongsTo(chat::class, 'id_chat');
     }
+
+    public function posts(): HasMany
+    {
+        return $this->hasMany(post::class, 'fk_id_group');
+    }
+
 }

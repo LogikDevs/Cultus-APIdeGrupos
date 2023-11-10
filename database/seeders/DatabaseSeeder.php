@@ -8,6 +8,7 @@ use App\Models\country;
 use App\Models\groups;
 use App\Models\chat;
 use App\Models\integrates;
+use App\Models\post;
 use Laravel\Passport\Client;
 class DatabaseSeeder extends Seeder
 {
@@ -18,5 +19,6 @@ class DatabaseSeeder extends Seeder
         $this->call(chatSeeder::class);
         $this->call(groupsSeeder::class);
         $this->call(integratesSeeder::class);
+        $this->call(postSeeder::class);
     }
 }

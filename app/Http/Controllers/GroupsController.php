@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\groups;
 use App\Models\user;
 use App\Models\integrates;
+use App\Models\post;
 use App\Http\Controllers\IntegratesController;
 use App\Http\Controllers\ChatController;
 use Illuminate\Support\Facades\Validator;
