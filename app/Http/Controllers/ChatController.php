@@ -164,7 +164,8 @@ class ChatController extends Controller
         if (!self::CheckUserGroup($user, $conversation)){
             return "User is not part of this conversation";
         } 
-        return chat::conversation($conversation)->setParticipant($user)->getMessages();
+        $participants = $conversation->getParticipants();
+        return response()->json([chat::conversation($conversation)->setParticipant($user)->getMessages(), $participants], 200);
     }
 
     public function DirectChatValidation(request $request){
