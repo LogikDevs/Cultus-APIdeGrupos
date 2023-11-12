@@ -28,6 +28,8 @@ Route::prefix('v1')->middleware(Autenticacion::class)->group(function(){
 
     Route::post("/chat/direct", [ChatController::class, "createDirectChat"]);
     Route::get("/chat/get/direct", [ChatController::class, "ListUserDirectChats"]);
+    Route::get("/chat/get/direct/{d}", [ChatController::class, "ListChatBetweenUsers"]);
+
 
     Route::get("/group/posts/{d}", [PostController::class, "ListGroupPosts"]);
 });
