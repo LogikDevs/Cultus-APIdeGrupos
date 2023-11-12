@@ -83,10 +83,10 @@ class GroupsController extends Controller
         if ($request->file("picture")){
             
         $path = $request->file('picture')->store('/public/picture');
-        $User -> profile_pic = basename($path);
+        $Group -> picture = basename($path);
         }
         $Group->save();
-
+        
         $Integrates = new  IntegratesController();     
         $Integrate =  $Integrates -> JoinGroupRequest($request->input('user.id'), $Group->id_group, $Group->id_chat, "Admin", $request);
 
