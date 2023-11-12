@@ -234,9 +234,26 @@ class ChatController extends Controller
     //list chat between 2 users
     public function ListChatBetweenUsers($id, request $request){
         $user = self::user($request);
+        //transactions
+        try{
+        DB::raw('LOCK TABLE users WRITE');
+        DB::raw('LOCK TABLE chat_participation WRITE');
+        DB::raw('LOCK TABLE chat_conversations WRITE');
+        DB::beginTransaction();
         $participant = user::findOrFail($id);
         $conversation = Chat::conversations()->between($user, $participant);
+        DB::commit();
+        DB::raw('UNLOCK TABLES');
         return response($conversation);
+        }
+        catch (\Illuminate\Database\QueryException $th) {
+            DB::rollback();
+            return $th->getMessage();
+        }
+        catch (\PDOException $th) {
+            return response("Permission to DB denied",403);
+        }     
+        
     }
 
 }
