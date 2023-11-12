@@ -83,7 +83,7 @@ class GroupsController extends Controller
         if ($request->file("picture")){
             
         $path = $request->file('picture')->store('/public/picture');
-        $Group -> picture = $path;
+        $User -> profile_pic = basename($path);
         }
         $Group->save();
 
