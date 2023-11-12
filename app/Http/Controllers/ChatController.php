@@ -231,5 +231,12 @@ class ChatController extends Controller
         }      
     }
 
+    //list chat between 2 users
+    public function ListChatBetweenUsers($id, request $request){
+        $user = self::user($request);
+        $participant = user::findOrFail($id);
+        $conversation = Chat::conversations()->between($user, $participant);
+        return response($conversation);
+    }
 
 }
