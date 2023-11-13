@@ -10,14 +10,14 @@ class integrates extends Model
 {
     use HasFactory;
     use SoftDeletes;
-
-    public function id_user(): BelongsTo
+    protected $primaryKey = 'id_integrates';
+    public function user(): BelongsTo
     {
         return $this->belongsTo(user::class, 'id_user');
     }
 
-    public function id_group(): BelongsTo
+    public function group(): BelongsTo
     {
-        return $this->belongsTo(groups::class, 'id_group');
+        return $this->belongsTo(groups::class, 'id_group', 'id_group');
     }
 }

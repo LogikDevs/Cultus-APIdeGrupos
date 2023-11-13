@@ -3,16 +3,22 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-
+use App\Models\chat;
 class groupsSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
     public function run()
     {
-        //
+        \App\Models\groups::factory()->create([
+            "id_group" => "1",
+            "name" => "grupoTest",
+        ]);
+        \App\Models\groups::factory()->create([
+            "id_group" => "100",
+            "id_chat" => "100",
+        ]);
+        \App\Models\groups::factory()
+        ->has(Chat::factory(), 'id_chat')
+        ->count(100)
+        ->create();      
     }
 }
