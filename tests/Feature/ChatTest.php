@@ -39,10 +39,10 @@ class ChatTest extends TestCase
     public function test_getChatGoodRequest()
     {
         $response = $this->withHeaders(['Authorization' => 'Bearer ' . $this->BearerToken])->get('/api/v1/chat/100');
-        $jsonData = json_decode($response->getContent(), true);
-        $this->assertTrue(
-        collect($jsonData['data'])->contains('body', 'test message'),
-        );
+        $response->assertJsonFragment([
+        'conversation_id' => 100,
+    ]);
+    
         $response->assertStatus(200);
     }
 
