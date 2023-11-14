@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use App\Models\groups;
 use App\Models\user;
 use App\Models\integrates;
@@ -28,6 +29,13 @@ class GroupsController extends Controller
 
     public function ListOne($id){
         return groups::findOrFail($id);
+    }
+
+    public function ListGroupPosts(request $request, $id){
+        $tokenHeader = [ "Authorization" => $request->header("Authorization")];
+        $route = getenv("API_POSTS_URL") . "/api/v1/posts/group/". $id;
+        $response = Http::withHeaders($tokenHeader)->get($route);
+        return response ($response);
     }
 
     public function ListUserGroups(request $request){
