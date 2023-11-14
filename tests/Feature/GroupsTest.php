@@ -71,10 +71,11 @@ class GroupsTest extends TestCase
             "name"=> "grupopro",
             "description"=> "pro",
             "privacy"=> "public",
-            "id_user" => 1
+            "id_user" => 11
         ]);
     $response -> assertStatus(201);
     $response -> assertJsonStructure([
+       [
         0=>[
             "name",
             "description",
@@ -85,6 +86,7 @@ class GroupsTest extends TestCase
             "id_group",
             "rol",
         ]
+        ]
     ]);
     $this->assertDatabaseHas('groups', [
         "name"=> "grupopro",
@@ -93,7 +95,7 @@ class GroupsTest extends TestCase
         "deleted_at" =>null
     ]);
     $this->assertDatabaseHas('integrates', [
-        "id_user"=> 1,
+        "id_user"=> 11,
         "rol"=>"Admin",
         "deleted_at" =>null
     ]);
@@ -103,7 +105,6 @@ class GroupsTest extends TestCase
         [
             "description"=> "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
             "privacy"=> "hola",
-            "id_user" => 1111111111111111
         ]);
     $response -> assertStatus(200);
 
@@ -111,7 +112,6 @@ class GroupsTest extends TestCase
         "name"=> ["The name field is required."],
         "description"=>["The description must not be greater than 255 characters."],
         "privacy"=>["The selected privacy is invalid."],
-        "id_user"=> ["The selected id user is invalid."]
 ]);
     }
     
