@@ -90,7 +90,6 @@ class IntegratesController extends Controller
     public function ListGroupIntegrates($Id){
         $Integrates = integrates::with('user')->get()->where('id_group', $Id);
 
-        //check integrates is not empty
         if ($Integrates->isEmpty())
         return response()->json("Group is empty or not valid", 405);
 
@@ -98,7 +97,20 @@ class IntegratesController extends Controller
         foreach ($Integrates as $Integrate){
             array_push($Users, $Integrate->user);
         }
-        return $Users;
+        return response($Users, 200);
+
+    }
+
+    public function ListGroupIntegratesIntern($Id){
+        $Integrates = integrates::with('user')->get()->where('id_group', $Id);
+        if ($Integrates->isEmpty())
+        return response()->json("Group is empty or not valid", 405);
+
+        $Users = array();
+        foreach ($Integrates as $Integrate){
+            array_push($Users, $Integrate->user);
+        }
+        return response($Users, 200);
 
     }
 

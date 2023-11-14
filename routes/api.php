@@ -30,5 +30,5 @@ Route::prefix('v1')->middleware(Autenticacion::class)->group(function(){
     Route::get("/chat/get/direct/{d}", [ChatController::class, "ListChatBetweenUsers"]);
 
 
-    Route::get("/group/posts/{d}", [GroupsController::class, "ListGroupPosts"]);
+    Route::get("/group/all/{d}", [GroupsController::class, "ListAllGroup"]);
 });
