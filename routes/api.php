@@ -5,7 +5,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GroupsController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\IntegratesController;
-use App\Http\Controllers\PostController;
 use App\Http\Middleware\Autenticacion;
 
 
@@ -31,5 +30,5 @@ Route::prefix('v1')->middleware(Autenticacion::class)->group(function(){
     Route::get("/chat/get/direct/{d}", [ChatController::class, "ListChatBetweenUsers"]);
 
 
-    Route::get("/group/posts/{d}", [PostController::class, "ListGroupPosts"]);
+    Route::get("/group/posts/{d}", [GroupsController::class, "ListGroupPosts"]);
 });

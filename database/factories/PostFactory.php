@@ -19,8 +19,7 @@ class PostFactory extends Factory
             'fk_id_user' => \App\Models\user::factory(),
             'fk_id_group' => \App\Models\groups::factory(),
             'text' => $text,
-            'latitud' => $this->faker->latitude(),
-            'longitud' => $this->faker->longitude(),
+            'location' => \App\Models\country::factory(),
             'date' => $this->faker->dateTime()
         ];
     }
