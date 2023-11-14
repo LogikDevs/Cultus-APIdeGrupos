@@ -31,11 +31,19 @@ class GroupsController extends Controller
         return groups::findOrFail($id);
     }
 
-    public function ListGroupPosts(request $request, $id){
+    public function ListAllGroup(request $request, $id){
+        $group = groups::findOrFail($id);
         $tokenHeader = [ "Authorization" => $request->header("Authorization")];
+        
         $route = getenv("API_POSTS_URL") . "/api/v1/posts/group/". $id;
+     
         $response = Http::withHeaders($tokenHeader)->get($route);
-        return response ($response);
+        $Integrates = new  IntegratesController();
+        $Integrates = $Integrates -> ListGroupIntegrates($id);
+        if($Integrates->status() != 200){
+            return $Integrates;
+        }
+        return response()->json([$group, $response, $Integrates], 200);
     }
 
     public function ListUserGroups(request $request){
