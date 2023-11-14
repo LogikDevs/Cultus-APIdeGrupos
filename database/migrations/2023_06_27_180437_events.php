@@ -4,18 +4,20 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateGroupsTable extends Migration
+class Events extends Migration
 {
-
     public function up()
     {
-        Schema::create('groups', function (Blueprint $table) {
-            $table->id("id_group");
+        Schema::create('events', function (Blueprint $table) {
+            $table->id();
             $table->string("name");
             $table->string("description")->nullable();
-            $table->string("picture")->nullable();
-            $table->string("privacy")->default('Public');
-           
+            $table->string("text");
+            $table->string("cover")->nullable();
+            $table->dateTime("start_date");
+            $table->dateTime("end_date");
+            $table->boolean("private");
+
             $table->timestamps();
             $table->softDeletes();
         });
@@ -23,6 +25,6 @@ class CreateGroupsTable extends Migration
 
     public function down()
     {
-        Schema::dropIfExists('groups');
+        Schema::dropIfExists('events');
     }
 }
